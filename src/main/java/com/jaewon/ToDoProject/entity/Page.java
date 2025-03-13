@@ -25,4 +25,9 @@ public class Page {
     public PageDto toDto() {
         return new PageDto(id,title);
     }
+
+    public void mergeWithExistingData(Page inputPage) {
+        if(inputPage.title != null)
+            this.title = inputPage.title;
+    }
 }
