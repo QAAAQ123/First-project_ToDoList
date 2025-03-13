@@ -1,5 +1,6 @@
 package com.jaewon.ToDoProject.entity;
 
+import com.jaewon.ToDoProject.dto.PageDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "page")
 public class Page {
     //페이지 id 자동 생성
     @Id
@@ -19,4 +21,8 @@ public class Page {
     //페이지 제목
     @Column
     private String title;
+
+    public PageDto toDto() {
+        return new PageDto(id,title);
+    }
 }

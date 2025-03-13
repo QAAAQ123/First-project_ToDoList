@@ -9,7 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Table(name = "ToDo")
 public class ToDo {
     @Id
     @Column(name = "list_id")
