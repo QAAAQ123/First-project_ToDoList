@@ -1,5 +1,6 @@
 package com.jaewon.ToDoProject.entity;
 
+import com.jaewon.ToDoProject.dto.ToDoDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,7 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "ToDo")
+@Table(name = "todo")
 public class ToDo {
     @Id
     @Column(name = "list_id")
@@ -22,4 +23,13 @@ public class ToDo {
 
     @Column
     private String content;
+
+    public ToDoDto toDto() {
+        return new ToDoDto(id,pageId.getId(),content);
+    }
+
+    public void mergeWithExistingData(ToDoDto toDoDto) {
+        if(toDoDto.getContent() != null)
+            this.content = toDoDto.getContent();
+    }
 }
