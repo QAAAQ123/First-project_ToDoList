@@ -26,10 +26,11 @@ import java.util.stream.Collectors;
 4. controller에서 page와 todo 기능 구현
 5. service로 기능 이전
 6. 예외 처리
-7. 메인 페이지 프론트 엔드 react로 구현
-8. 단일 페이지 프론트 엔드 react로 구현
-9. 최종 확인
-10. 배포
+7. 코드 리팩터링
+8. 메인 페이지 프론트 엔드 react로 구현
+9. 단일 페이지 프론트 엔드 react로 구현
+10. 최종 확인
+11. 배포
 
 메소드
 1.전체 페이지 get 요청 showPages
@@ -42,13 +43,13 @@ import java.util.stream.Collectors;
 8.단일 페이지의 할일 목록을 제거하는 delete 요청 deleteToDo
 */
 @org.springframework.web.bind.annotation.RestController
-
+@RequestMapping("/pages")
 public class RestController {
    @Autowired
    private Service service;
 
     //메인 화면(페이지 전체 보기)
-    @GetMapping("/pages")
+    @GetMapping("")
     public ResponseEntity<List<PageDto>> showPages(){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.showPagesService());
@@ -56,7 +57,7 @@ public class RestController {
 
     //페이지 새로 생성
     @Transactional
-    @PostMapping("/pages")
+    @PostMapping("")
     public ResponseEntity<PageDto> createPage(@RequestBody PageDto pageDto){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.createPageService(pageDto));
@@ -64,7 +65,7 @@ public class RestController {
 
     //페이지 제목 수정
     @Transactional
-    @PatchMapping("/pages/{pageId}")
+    @PatchMapping("/{pageId}")
     public ResponseEntity<PageDto> updatePage(@RequestBody PageDto pageDto,@PathVariable(name = "pageId") Long pageId){
         PageDto updatedDto = service.updatePageService(pageDto,pageId);
         return (updatedDto == null) ?
@@ -74,14 +75,14 @@ public class RestController {
 
     //페이지 삭제
     @Transactional
-    @DeleteMapping("/pages/{pageId}")
+    @DeleteMapping("/{pageId}")
     public ResponseEntity deletePage(@PathVariable(name = "pageId") Long pageId){
         service.deletePageService(pageId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //단일 페이지 즉,할일 목록이 보여지는 페이지 보이기
-    @GetMapping("/pages/{pageId}")
+    @GetMapping("/{pageId}")
     public ResponseEntity<PageDto> showPage(@PathVariable(name = "pageId") Long pageId){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.showPageService(pageId));
@@ -89,7 +90,7 @@ public class RestController {
 
     //할일 생성
     @Transactional
-    @PostMapping("/pages/{pageId}")
+    @PostMapping("/{pageId}")
     public ResponseEntity<PageDto> createToDo(@PathVariable(name = "pageId") Long pageId, @RequestBody ToDoDto toDoDto){
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.createToDoService(pageId,toDoDto));
@@ -97,7 +98,7 @@ public class RestController {
 
     //할일 수정
     @Transactional
-    @PatchMapping("/pages/{pageId}/{toDoId}")
+    @PatchMapping("/{pageId}/{toDoId}")
     public ResponseEntity<PageDto> updateToDo(@PathVariable(name = "pageId") Long pageId,
                                               @PathVariable(name = "toDoId") Long toDoId, @RequestBody ToDoDto toDoDto){
         return ResponseEntity.status(HttpStatus.OK)
@@ -106,7 +107,7 @@ public class RestController {
 
     //할일 삭제
     @Transactional
-    @DeleteMapping("/pages/{pageId}/{toDoId}")
+    @DeleteMapping("/{pageId}/{toDoId}")
     public ResponseEntity<PageDto> deleteToDo(@PathVariable(name = "pageId") Long pageId,@PathVariable(name = "toDoId") Long toDoId){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.deleteToDoService(pageId,toDoId));
