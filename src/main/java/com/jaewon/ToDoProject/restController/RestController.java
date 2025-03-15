@@ -64,11 +64,11 @@ public class RestController {
     //페이지 제목 수정
     //예외처리 id가 변경 되었거나 title이 null(수정시 "" 로 작성한 경우)
     @Transactional
-    @PatchMapping("/pages/{pageId}")
-    public ResponseEntity<PageDto> updatePage(@RequestBody PageDto pageDto,@PathVariable Long pageId){
+    @PatchMapping("/pages/{pageid}")
+    public ResponseEntity<PageDto> updatePage(@RequestBody PageDto pageDto,@PathVariable(name = "pageid") Long pageid){
         Page page = pageDto.toEntity(); //수정하려고 들어온 title데이터
-        Page updateTarget = pageRepository.findById(pageId).
-                orElseThrow(() -> new EntityNotFoundException("해당 id의 페이지가 없습니다."));;
+        Page updateTarget = pageRepository.findById(pageid).
+                orElseThrow(() -> new IllegalArgumentException("해당 id의 페이지가 없습니다."));;
         updateTarget.mergeWithExistingData(page);
         Page updated = pageRepository.save(updateTarget);
         PageDto updatedDto = updated.toDto();
@@ -80,18 +80,28 @@ public class RestController {
     //예외 처리 삭제 하려는 id가 없을
     @Transactional
     @DeleteMapping("/pages/{pageId}")
-    public ResponseEntity<PageDto> deletePage(@PathVariable Long pageId){
+    public ResponseEntity<PageDto> deletePage(@PathVariable(name = "pageId") Long pageId){
+        //todo 삭제
+        List<ToDo> deleteTargetToDoList = toDoRepository.findByPageId(pageRepository.findById(pageId)
+                . orElseThrow(() -> new IllegalArgumentException("해당 id의 페이지가 없습니다.")));
+        toDoRepository.deleteAll(deleteTargetToDoList);
+        log.info("deleteToDo entity:{}",deleteTargetToDoList);
+
+        //page 삭제
         Page deleteTarget = pageRepository.findById(pageId).
-                orElseThrow(() -> new EntityNotFoundException("해당 id의 페이지가 없습니다."));
+                orElseThrow(() -> new IllegalArgumentException("해당 id의 페이지가 없습니다."));
         pageRepository.delete(deleteTarget);
-        log.info("deletePage DTO:{}",deleteTarget.toString());
+        log.info("deletePage entity:{}",deleteTarget.toString());
+
+
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     //단일 페이지 즉,할일 목록이 보여지는 페이지 보이기
     //예외처리 id가 없을때
     @GetMapping("/pages/{pageId}")
-    public ResponseEntity<PageDto> showPage(@PathVariable Long pageId){
+    public ResponseEntity<PageDto> showPage(@PathVariable(name = "pageId") Long pageId){
         //page 처리
         Page page = pageRepository.findById(pageId).
                 orElseThrow(() -> new EntityNotFoundException("해당 id의 페이지가 없습니다."));
@@ -99,7 +109,8 @@ public class RestController {
         log.info("showPage page DTO: {}", pageDto.toString());
 
         //toDo 처리
-        List<ToDo> toDoList = toDoRepository.findAll();
+        List<ToDo> toDoList = toDoRepository.findByPageId(pageRepository.findById(pageId)
+                . orElseThrow(() -> new IllegalArgumentException("해당 id의 페이지가 없습니다.")));
         List<ToDoDto> toDoDtoList = toDoList.stream()
                 .map(toDo -> (ToDoDto) toDo.toDto())
                 .collect(Collectors.toList());
@@ -115,7 +126,7 @@ public class RestController {
     //예외 처리 할일의 내용이 없거나 id에 오류가 있을 경우
     @Transactional
     @PostMapping("/pages/{pageId}")
-    public ResponseEntity<PageDto> createToDo(@PathVariable Long pageId, @RequestBody ToDoDto toDoDto){
+    public ResponseEntity<PageDto> createToDo(@PathVariable(name = "pageId") Long pageId, @RequestBody ToDoDto toDoDto){
         //page 처리
         Page page = pageRepository.findById(pageId).
                 orElseThrow(() -> new EntityNotFoundException("해당 id의 페이지가 없습니다."));
@@ -141,7 +152,8 @@ public class RestController {
     //할일 수정
     @Transactional
     @PatchMapping("/pages/{pageId}/{toDoId}")
-    public ResponseEntity<PageDto> updateToDo(@PathVariable Long pageId,@PathVariable Long toDoId, @RequestBody ToDoDto toDoDto){
+    public ResponseEntity<PageDto> updateToDo(@PathVariable(name = "pageId") Long pageId,
+                                              @PathVariable(name = "toDoId") Long toDoId, @RequestBody ToDoDto toDoDto){
         //page
         Page page = pageRepository.findById(pageId).
                 orElseThrow(() -> new EntityNotFoundException("해당 id의 페이지가 없습니다."));
@@ -168,7 +180,7 @@ public class RestController {
 
     @Transactional
     @DeleteMapping("/pages/{pageId}/{toDoId}")
-    public ResponseEntity<PageDto> deleteToDo(@PathVariable Long pageId,@PathVariable Long toDoId){
+    public ResponseEntity<PageDto> deleteToDo(@PathVariable(name = "pageId") Long pageId,@PathVariable(name = "toDoId") Long toDoId){
         //page
         Page page = pageRepository.findById(pageId).
                 orElseThrow(() -> new EntityNotFoundException("해당 id의 페이지가 없습니다."));
