@@ -78,9 +78,10 @@ public class Service {
         List<ToDo> deleteTargetToDoList = toDoRepository.findByPageId(pageRepository.findById(pageId)
                 . orElseThrow(() -> new IllegalArgumentException("해당 id의 페이지가 없습니다.")));
         toDoRepository.deleteAll(deleteTargetToDoList);
-        if(deleteTargetToDoList != null){
+        if (!toDoRepository.findByPageId(pageRepository.findById(pageId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 id의 페이지가 없습니다."))).isEmpty()) {
             log.error("페이지 삭제 과정에서 할일목록이 제거되지 않았습니다.");
-            throw new EmptyResultDataAccessException("해당 페이지의 ToDo가 제거되지 않았습니다.",0);
+            throw new IllegalStateException("해당 페이지의 ToDo가 제거되지 않았습니다.");
         }
         log.info("deleteToDo entity:{}",deleteTargetToDoList);
 
@@ -88,9 +89,9 @@ public class Service {
         Page deleteTarget = pageRepository.findById(pageId).
                 orElseThrow(() -> new IllegalArgumentException("해당 id의 페이지가 없습니다."));
         pageRepository.delete(deleteTarget);
-        if(deleteTarget != null){
+        if(pageRepository.existsById(pageId)){
             log.error("페이지 삭제 과정에서 페이지가 제거되지 않았습니다.");
-            throw new EmptyResultDataAccessException("해당 페이지가 제거되지 않았습니다.",0);
+            throw new IllegalStateException("해당 페이지가 제거되지 않았습니다.");
         }
         log.info("deletePage entity:{}",deleteTarget.toString());
     }
@@ -162,7 +163,7 @@ public class Service {
         log.info("updateToDo page DTO: {}",pageDto);
 
         //todo
-        ToDo updateTarget = toDoRepository.findById(pageId).
+        ToDo updateTarget = toDoRepository.findById(toDoId).
                 orElseThrow(() -> new EntityNotFoundException("해당 id의 할일을 생성 할 수 없습니다."));
         updateTarget.mergeWithExistingData(toDoDto);
         ToDo updatedTarget = toDoRepository.save(updateTarget);
@@ -192,9 +193,9 @@ public class Service {
         ToDo deleteTargetToDoList = toDoRepository.findById(toDoId).
                 orElseThrow(() -> new EntityNotFoundException("해당 id의 할일을 삭제 할 수 없습니다."));
         toDoRepository.delete(deleteTargetToDoList);
-        if(deleteTargetToDoList != null){
+        if(toDoRepository.existsById(toDoId)){
             log.error("할일목록이 제거되지 않았습니다.");
-            throw new EmptyResultDataAccessException("ToDo가 제거되지 않았습니다.",0);
+            throw new IllegalStateException("ToDo가 제거되지 않았습니다.");
         }
         log.info("deleteToDo todo DTO: {}", deleteTargetToDoList.toString());
 

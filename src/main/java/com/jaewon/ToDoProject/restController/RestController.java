@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
 6.단일 페이지의 할일 목록을 생성 post 요청 createToDo
 7.단일 페이지의 할일 목록을 수정하는 patch 요청 updateToDo
 8.단일 페이지의 할일 목록을 제거하는 delete 요청 deleteToDo
+
+페이지 데이터: id,title
+할일 데이터: id,pageId,content
 */
 @org.springframework.web.bind.annotation.RestController
 @RequestMapping("/pages")
