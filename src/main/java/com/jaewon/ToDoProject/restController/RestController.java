@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
 할일 데이터: id,pageId,content
 */
 @org.springframework.web.bind.annotation.RestController
-@CrossOrigin(origins = "http://localhost:3000")
+
 @RequestMapping("/pages")
 public class RestController {
    @Autowired

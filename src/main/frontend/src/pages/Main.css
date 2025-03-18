@@ -1,0 +1,139 @@
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.todo-item:hover {
+  transform: translateY(-2px);
+}
+
+.todo-item span {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.page-link {
+  text-decoration: none;
+  color: #444;
+  flex-grow: 1; /* 링크가 공간을 채우도록 */
+}
+
+.page-link:hover {
+  color: #2196f3; /* 호버 시 색상 변경 */
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.update-btn,
+.delete-btn,
+.create-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
+}
+
+.update-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.update-btn:hover {
+  background-color: #45a049;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #da190b;
+}
+
+.create-section {
+  position: fixed;
+  bottom: 60px;
+  left: 20px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.todo-input {
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  resize: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.todo-input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+.create-btn {
+  background-color: #2196f3;
+  color: white;
+}
+
+.create-btn:hover {
+  background-color: #1976d2;
+}
+
+.error {
+  color: #f44336;
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.2rem;
+  color: #666;
+}
